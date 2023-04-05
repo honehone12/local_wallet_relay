@@ -13,11 +13,17 @@ function App() {
   const [address, setAddress] = React.useState<string | null>(null);
 
   const init = async () => {
-    eventSource.addEventListener('data', function(event) {  
+    eventSource.addEventListener('data', async (event) => {  
       console.log('server sent event: ', event.data);
-      const payload: RpcRequest = JSON.parse(event.data);
       eventSource.close();
+      const payload: RpcRequest = JSON.parse(event.data);
+      try {
+        await window.aptos.signAndSubmitTransaction(payload);
+      } catch (e) {
+        console.log(e);
+      }
     });
+    
     const {address} = await window.aptos.connect();
     setAddress(address);
   }
