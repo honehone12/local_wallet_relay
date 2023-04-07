@@ -25,13 +25,13 @@ function App() {
       eventSource = new EventSource('sse');
       if (eventSource !== null) {
         eventSource.addEventListener('payload', async (event) => {  
-          console.log('server sent event: ', event.data);
           if (eventSource !== null) {
             eventSource.close();
           }
-          const payload: RpcRequest = JSON.parse(event.data);
           try {
+            const payload: RpcRequest = JSON.parse(event.data);
             await window.aptos.signAndSubmitTransaction(payload);
+            window.close();
           } catch (e) {
             console.log(e);
           }
@@ -41,13 +41,13 @@ function App() {
 
     if (params.has('address') && address !== null) {
       try {
-        const res = await fetch('http://127.0.0.1:8080/address', {
+        await fetch('http://127.0.0.1:8080/address', {
           method: 'POST',
           mode: 'same-origin',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({hex: address}) 
         });
-        console.log('response of fetch: ', res);
+        window.close();
       } catch (e) {
         console.log(e);
       }
@@ -62,8 +62,8 @@ function App() {
     <div className="App">
       <header className="App-header">
         <p>
-          This is served from local computer.<br/>
-          Only your wallet has internet access.
+          This window will be closed automatically.<br/>
+          If not, please close manually.
         </p>
       </header>
     </div>

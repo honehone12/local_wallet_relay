@@ -181,7 +181,7 @@ async fn address_request_handler(State(address_memory): State<TempAddressMemory>
 -> Result<impl IntoResponse, StatusCode> {
     if let Ok(()) = webbrowser::open("http://127.0.0.1:8080/?address=true") {
         while address_memory.read().await.is_none() {
-            time::sleep(Duration::from_millis(100)).await;
+            time::sleep(Duration::from_millis(50)).await;
         }
 
         let mut mem = address_memory.write().await;
